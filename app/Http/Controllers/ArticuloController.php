@@ -32,6 +32,32 @@ class ArticuloController extends Controller
         }
     }
 
+    public function create()
+    {
+        $categoria = DB::table('categoria')
+        ->select('cod_cat','des_cat')
+        ->orderBy('cod_cat','asc')
+        ->get();
+
+        $presentacion = DB::table('presentacion')
+        ->select('cod_pres','des_pres')
+        ->orderBy('cod_pres','asc')
+        ->get();
+
+        $unid_med = DB::table('unid_med')
+        ->select('cod_unid_med','des_unid_med')
+        ->orderBy('cod_unid_med','asc')
+        ->get();
+
+        return response()->json([
+            "categoria"=>$categoria,
+            "presentacion"=>$presentacion,
+            "unid_med"=>$unid_med
+        ], 200,);
+        
+    }
+
+
     public function store(FormArticulo $request)
     {
         

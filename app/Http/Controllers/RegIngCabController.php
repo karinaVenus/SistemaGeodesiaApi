@@ -45,7 +45,7 @@ class RegIngCabController extends Controller
         $almacen = DB::table('almacen')
         ->select('cod_almacen','des_almacen')
         ->orderBy('cod_almacen','asc')
-        ->get();;
+        ->get();
 
         $trabajador = DB::table('trabajador as t')
         ->join('persona as pet','t.cod_trabajador','=','pet.cod_persona')
@@ -57,13 +57,13 @@ class RegIngCabController extends Controller
         $tipo_transf = DB::table('tipo_transf')
         ->select('cod_t_transf','des_transf')
         ->orderBy('cod_t_transf','asc')
-        ->get();;
+        ->get();
 
         $tipo_doc_reg = DB::table('tipo_doc_reg')
         ->select('cod_t_doc','des_t_doc')
         ->where('tipo_reg_doc','=','Ingreso')
         ->orderBy('cod_t_doc','asc')
-        ->get();;
+        ->get();
 
         $articulo = DB::table('articulo as art')
         ->join('unid_med as um','art.cod_unid_med','=','um.cod_unid_med')
