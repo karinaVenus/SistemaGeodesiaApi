@@ -88,9 +88,15 @@ class ArticuloController extends Controller
        
     }
 
-    public function show(Articulo $articulo)
+    public function show($id)
     {
-        //
+        $articulo = DB::table('articulo as art')
+        ->join('categoria as cat','art.cod_cat','=','cat.cod_cat')
+        ->join('presentacion as pr','art.cod_pres','=','pr.cod_pres')
+        ->join('unid_med as um','art.cod_unid_med','=','um.cod_unid_med')
+        ->select('art.des_art','cat.des_cat','pr.des_pres','um.des_unid_med','art.stock_art','art.imagen_art')
+        ->where('rd.cod_art','=',$id)
+        ->get();
     }
 
     public function edit(Articulo $articulo)
