@@ -95,8 +95,12 @@ class ArticuloController extends Controller
         ->join('presentacion as pr','art.cod_pres','=','pr.cod_pres')
         ->join('unid_med as um','art.cod_unid_med','=','um.cod_unid_med')
         ->select('art.des_art','cat.des_cat','pr.des_pres','um.des_unid_med','art.stock_art','art.imagen_art')
-        ->where('rd.cod_art','=',$id)
+        ->where('art.cod_art','=',$id)
         ->get();
+
+        return response()->json([
+            "articulo" => $articulo
+        ], 200, );
     }
 
     public function edit(Articulo $articulo)

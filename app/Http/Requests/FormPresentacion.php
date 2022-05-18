@@ -8,14 +8,13 @@ class FormPresentacion extends FormRequest
 {
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     public function rules()
     {
         return [
             'des_pres'=>'required|max:45',//requerido, max 50
-            'estado_pres'=>'required|max:10'
         ];
     }
 }
