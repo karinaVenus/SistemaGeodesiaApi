@@ -4,8 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FormPresentacion extends FormRequest
+class FormCategoria extends FormRequest
 {
+
     public function authorize()
     {
         return true;
@@ -14,7 +15,7 @@ class FormPresentacion extends FormRequest
     public function rules()
     {
         return [
-            'des_pres'=>'required|max:45',//requerido, max 45
+            'des_cat'=>'required|max:45',//requerido, max 45
         ];
     }
 }
