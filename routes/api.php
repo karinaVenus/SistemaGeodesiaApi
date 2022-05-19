@@ -43,3 +43,8 @@ Route::get('/unidadMedida/{id}','App\Http\Controllers\UnidMedController@show');
 Route::get('/tiposTransferencias','App\Http\Controllers\TipoTransfController@index');
 Route::post('/tipoTransferencia','App\Http\Controllers\TipoTransfController@store');
 Route::get('/tipoTransferencia/{id}','App\Http\Controllers\TipoTransfController@show');
+
+Route::get('/registrosSalidas','App\Http\Controllers\RegSalCabController@index');
+Route::get('/registrosSalidas/create','App\Http\Controllers\RegSalCabController@create');
+Route::post('/registroSalida','App\Http\Controllers\RegSalCabController@store');
+Route::get('/registroSalida/{id}','App\Http\Controllers\RegSalCabController@show');
