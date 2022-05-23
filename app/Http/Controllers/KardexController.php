@@ -7,11 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class KardexController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
         //URL: http://127.0.0.1:8000/api/kardex?articulo=ART01&fec_ini=2022-05-22&fec_fin=2022-05-31
@@ -24,7 +19,8 @@ class KardexController extends Controller
         $articulo = $request->get('articulo');
         $fec_ini = $request->get('fec_ini');
         $fec_fin = $request->get('fec_fin');
-        $kardex = "";
+        $kardex = "";$val_net_ini = "";$cant_ini = "";  
+        
         if($articulo != null && $fec_ini != null && $fec_fin != null){
             $val_net_ini = DB::select('call total_valor_lapso(?,?)',array($articulo,$fec_ini));;
             $cant_ini = DB::select('call total_cant_lapso(?,?)',array($articulo,$fec_ini));; 
@@ -42,67 +38,31 @@ class KardexController extends Controller
         ], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //

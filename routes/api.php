@@ -50,3 +50,5 @@ Route::post('/registroSalida','App\Http\Controllers\RegSalCabController@store');
 Route::get('/registroSalida/{id}','App\Http\Controllers\RegSalCabController@show');
 
 Route::get('/kardex','App\Http\Controllers\KardexController@index');
+
+Route::get('/inventario','App\Http\Controllers\InventarioController@index');

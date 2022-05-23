@@ -16,7 +16,7 @@ class FormUnid_Med extends FormRequest
     {
         return [
             'des_unid_med'=>'required|max:45',
-            'prefijp_unid_med'=>'required|max:10'
+            'prefijo_unid_med'=>'required|max:10'
         ];
     }
 }
