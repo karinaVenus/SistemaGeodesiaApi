@@ -48,3 +48,5 @@ Route::get('/registrosSalidas','App\Http\Controllers\RegSalCabController@index')
 Route::get('/registrosSalidas/create','App\Http\Controllers\RegSalCabController@create');
 Route::post('/registroSalida','App\Http\Controllers\RegSalCabController@store');
 Route::get('/registroSalida/{id}','App\Http\Controllers\RegSalCabController@show');
+
+Route::get('/kardex','App\Http\Controllers\KardexController@index');
