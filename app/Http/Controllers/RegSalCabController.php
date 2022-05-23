@@ -67,8 +67,9 @@ class RegSalCabController extends Controller
 
         $articulo = DB::table('articulo as art')
         ->join('unid_med as um','art.cod_unid_med','=','um.cod_unid_med')
-        ->select('art.cod_art','art.des_art','um.des_unid_med') // falta precio
+        ->select('art.cod_art','art.des_art','um.des_unid_med','art.stock_art') // falta precio
         //where stock mayor a 0
+        ->where('art.stock_art','>','0')
         ->orderBy('art.cod_art','asc')
         ->get();
          
