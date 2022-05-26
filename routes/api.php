@@ -52,3 +52,9 @@ Route::get('/registroSalida/{id}','App\Http\Controllers\RegSalCabController@show
 Route::get('/kardex','App\Http\Controllers\KardexController@index');
 
 Route::get('/inventario','App\Http\Controllers\InventarioController@index');
+
+Route::get('/proveedores','App\Http\Controllers\ProveedorController@index');
+Route::get('/proveedor/provincias/{id}','App\Http\Controllers\ProveedorController@provincias');
+Route::get('/proveedor/distritos/{id}','App\Http\Controllers\ProveedorController@distritos');
+Route::get('/proveedores/create','App\Http\Controllers\ProveedorController@create');
+Route::post('/proveedor','App\Http\Controllers\ProveedorController@store');
