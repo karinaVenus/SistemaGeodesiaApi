@@ -50,8 +50,11 @@ Route::post('/registroSalida','App\Http\Controllers\RegSalCabController@store');
 Route::get('/registroSalida/{id}','App\Http\Controllers\RegSalCabController@show');
 
 Route::get('/kardex','App\Http\Controllers\KardexController@index');
+Route::get('/kardex/articulos/{id}','App\Http\Controllers\KardexController@articulos');
+Route::post('/kardexReporte','App\Http\Controllers\KardexController@kardex');
 
 Route::get('/inventario','App\Http\Controllers\InventarioController@index');
+Route::get('/inventarioReporte/{id}','App\Http\Controllers\InventarioController@inventario');
 
 Route::get('/proveedores','App\Http\Controllers\ProveedorController@index');
 Route::get('/proveedor/provincias/{id}','App\Http\Controllers\ProveedorController@provincias');
