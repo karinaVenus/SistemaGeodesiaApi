@@ -64,22 +64,30 @@ class RegSalCabController extends Controller
         ->where('tipo_reg_doc','=','Salida')
         ->orderBy('cod_t_doc','asc')
         ->get();
-
-        $articulo = DB::table('articulo as art')
-        ->join('unid_med as um','art.cod_unid_med','=','um.cod_unid_med')
-        ->select('art.cod_art','art.des_art','um.des_unid_med','art.stock_art') // falta precio
-        //where stock mayor a 0
-        ->where('art.stock_art','>','0')
-        ->orderBy('art.cod_art','asc')
-        ->get();
          
         return response()->json([
             "solicitante"=>$solicitante,
             "autorizador"=>$autorizador,
             "almacen"=>$almacen,
             "tipo_transf"=>$tipo_transf,
-            "tipo_doc_reg"=>$tipo_doc_reg,
-            "articulo"=>$articulo
+            "tipo_doc_reg"=>$tipo_doc_reg
+        ], 200,);
+    }
+
+    public function articulos($id)
+    {
+        $articulos = DB::table('articulo as art')
+        ->join('unid_med as um','art.cod_unid_med','=','um.cod_unid_med')
+        ->join('inventario as inv','art.cod_art','=','inv.cod_art')
+        ->select(DB::raw("art.cod_art,CONCAT(art.des_art,' | ',um.prefijo_unid_med) as articulo"))// falta precio
+        //where stock mayor a 0
+        ->where('inv.stock_almacen','>','0')
+        ->where('cod_almacen','=',$id)
+        ->orderBy('art.des_art','asc')
+        ->get();
+
+        return response()->json([
+            "articulos"=>$articulos
         ], 200,);
     }
 
@@ -107,16 +115,7 @@ class RegSalCabController extends Controller
             $obs_sal = $request->get('obs_sal');
 
             $cont=0;
-//$cantidadMayorIgual = "";
-//$cantidadMenor = "";
-//$retirar = "";
-//$comparar ="";
-//$entrefor ="";
-//$i1 = "";
-//$i2 = "";
-//$i3 = "";
-//$i4 = "";
-//$i5 = "";
+
             while($cont < count($cod_art)){
                 $id_reg_ing_det = $reg_sal_cab->cod_reg_sal;
                 $cod_art_detalle = $cod_art[$cont];
@@ -124,7 +123,6 @@ class RegSalCabController extends Controller
                 
                 $cont_art = 0;
                 while ($cant_a_retirar>0){
-//$retirar = $retirar." | ".$cant_a_retirar;
                      $art_ing_antiguo = DB::table('reg_ing_aux')
                      ->select('fec_ing','prec_art','cant_art')
                      ->where('reg_ing_aux.cod_art','=',$cod_art_detalle)
@@ -134,11 +132,8 @@ class RegSalCabController extends Controller
                     $cantidad_reg_antiguo = $art_ing_antiguo->cant_art;
                     $precio_reg_antiguo = $art_ing_antiguo->prec_art;
                     $fecha_reg_antiguo = $art_ing_antiguo->fec_ing;
-                    //$R = $R." | ".$cod_art_detalle." ".$cantidad_reg_antiguo." ".$precio_reg_antiguo." ".$fecha_reg_antiguo;
 
                     if($cantidad_reg_antiguo <= $cant_a_retirar){
-//$cantidadMayorIgual .= "Entro 1-".$cont. " | ";
-//$retirar = $retirar." |- ".$cant_a_retirar;
                         $cant_a_retirar = $cant_a_retirar - $cantidad_reg_antiguo;
                         $cantidad_retirada = $cantidad_reg_antiguo;
                         //update tabla_aux_ing set cant_art = 0 where coincida el articulo y la fecha ..... triger despues de un update si el art es 0, delete
@@ -147,8 +142,6 @@ class RegSalCabController extends Controller
                         ->where('cod_art', $cod_art_detalle)
                         ->delete();
                     }else{
-//$cantidadMenor .= "Entro 2-".$cont. " | ";
-//$retirar = $retirar." |-- ".$cant_a_retirar;
                         $nuevo_cantidad_registro_antiguo = $cantidad_reg_antiguo - $cant_a_retirar;
                         $cantidad_retirada = $cant_a_retirar;
                         $cant_a_retirar = 0;
@@ -166,9 +159,7 @@ class RegSalCabController extends Controller
                     for( $i=0; $i < $cont_art; $i++){
                         if($reg_sal_det[$i]->prec_sal ==  $reg_sal_det[$cont_art]->prec_sal){
                             $reg_sal_det[$i]->cant_art += $cantidad_retirada;
-//$entrefor = "pos entre for";
                             $nuevo = false;
-//$comparar = "SI ".$cod_art_detalle." ".$reg_sal_det[$i]->cant_art;
                         }
                     }
 
@@ -181,53 +172,23 @@ class RegSalCabController extends Controller
                         //$reg_sal_det->save();
                         $cont_art++;
                     }
-
-
                 }
-//$recorrido = "";
+
                 
                 for($i=0; $i<$cont_art; $i++){
-//$recorrido .= "| ".$i."->".$cont;
                     $regSal = $reg_sal_det[$i]->cod_reg_sal;
                     $codArt = $reg_sal_det[$i]->cod_art;
                     $cantArt = $reg_sal_det[$i]->cant_art;
                     $precSal = $reg_sal_det[$i]->prec_sal;
                     $obsSal = $reg_sal_det[$i]->obs_sal;
-
-//$i1 = $i1. " ". $regSal;
-//$i2 = $i2. " ". $codArt;
-// $i3 = $i3. " ". $cantArt;
-// $i4 = $i4. " ". $precSal;
-// $i5 = $i5. " ". $obsSal;
-                   // DB::insert('insert into reg_sal_det (cod_reg_sal,cod_art,cant_art,prec_sal,obs_sal) values(?,?,?,?,?)',[$regSal,$codArt,$cantArt,$precSal,$obsSal]);
+                    // DB::insert('insert into reg_sal_det (cod_reg_sal,cod_art,cant_art,prec_sal,obs_sal) values(?,?,?,?,?)',[$regSal,$codArt,$cantArt,$precSal,$obsSal]);
+                    
                     DB::table('reg_sal_det')->insert(
                         ['cod_reg_sal' => $regSal, 'cod_art' => $codArt,'cant_art' => $cantArt,'prec_sal' => $precSal, 'obs_sal' =>$obsSal]
                     );
-
-                    //$reg_sal_det_ins->save();
-// $recorrido .= " / ".$i."->".$cont;
                 }
                 $cont++;
             }
-
-
-            
-
-            //original
-            // while($cont < count($cod_art)){
-            //     $reg_sal_det = new Reg_sal_det();
-            //     $reg_sal_det->cod_reg_sal = $reg_sal_cab->cod_reg_sal;
-
-            //     $reg_sal_det->cod_art = $cod_art[$cont];
-            //     $reg_sal_det->cant_art = $cant_art[$cont];
-            //     $reg_sal_det->prec_sal = $prec_sal[$cont];
-            //     //validar vacio observacion
-            //     $reg_sal_det->obs_sal = $obs_sal[$cont];
-
-            //     $reg_sal_det->save();
-
-            //     $cont = $cont + 1;
-            // }
 
             DB::commit();
 

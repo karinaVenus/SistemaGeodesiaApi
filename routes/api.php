@@ -25,6 +25,7 @@ Route::get('/articulo/{id}','App\Http\Controllers\ArticuloController@show');
 
 Route::get('/registrosIngresos','App\Http\Controllers\RegIngCabController@index');
 Route::get('/registrosIngresos/create','App\Http\Controllers\RegIngCabController@create');
+Route::get('/registroIngreso/articulos/{id}','App\Http\Controllers\RegIngCabController@articulos');//articulos
 Route::post('/registroIngreso','App\Http\Controllers\RegIngCabController@store');
 Route::get('/registroIngreso/{id}','App\Http\Controllers\RegIngCabController@show');
 
@@ -46,6 +47,7 @@ Route::get('/tipoTransferencia/{id}','App\Http\Controllers\TipoTransfController@
 
 Route::get('/registrosSalidas','App\Http\Controllers\RegSalCabController@index');
 Route::get('/registrosSalidas/create','App\Http\Controllers\RegSalCabController@create');
+Route::get('/registroSalida/articulos/{id}','App\Http\Controllers\RegSalCabController@articulos');//articulos
 Route::post('/registroSalida','App\Http\Controllers\RegSalCabController@store');
 Route::get('/registroSalida/{id}','App\Http\Controllers\RegSalCabController@show');
 

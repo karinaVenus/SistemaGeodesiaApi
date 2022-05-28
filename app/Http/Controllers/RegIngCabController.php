@@ -83,6 +83,20 @@ class RegIngCabController extends Controller
 
     }
 
+    public function articulos($id)
+    {
+        $articulos = DB::table('articulo as art')
+        ->join('unid_med as um','art.cod_unid_med','=','um.cod_unid_med')
+        ->join('inventario as inv','art.cod_art','=','inv.cod_art')
+        ->select(DB::raw("art.cod_art,CONCAT(art.des_art,' | ',um.prefijo_unid_med) as articulo"))
+        ->where('cod_almacen','=',$id)
+        ->orderBy('art.des_art','asc')
+        ->get();
+
+        return response()->json([
+            "articulos"=>$articulos
+        ], 200,);
+    }
 
     public function store(FormReg_ing_cab $request)
     {

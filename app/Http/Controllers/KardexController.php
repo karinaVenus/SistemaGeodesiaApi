@@ -26,7 +26,7 @@ class KardexController extends Controller
         ->join('inventario as inv','inv.cod_art','=','art.cod_art')
         ->select(DB::raw("art.cod_art,CONCAT(art.des_art,' | ',um.prefijo_unid_med) as articulo"))
         ->where('cod_almacen','=',$id)
-        ->orderBy('art.cod_art','asc')
+        ->orderBy('art.des_art','asc')//ordenar por nombre
         ->get();
 
         return response()->json([
