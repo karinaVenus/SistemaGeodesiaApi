@@ -45,6 +45,10 @@ Route::get('/tiposTransferencias','App\Http\Controllers\TipoTransfController@ind
 Route::post('/tipoTransferencia','App\Http\Controllers\TipoTransfController@store');
 Route::get('/tipoTransferencia/{id}','App\Http\Controllers\TipoTransfController@show');
 
+Route::get('/tiposDocumentosRegistros','App\Http\Controllers\TipoDocRegController@index');
+Route::post('/tipoDocumentoRegistro','App\Http\Controllers\TipoDocRegController@store');
+Route::get('/tipoDocumentoRegistro/{id}','App\Http\Controllers\TipoDocRegController@show'); //tipo de documento de registro
+
 Route::get('/registrosSalidas','App\Http\Controllers\RegSalCabController@index');
 Route::get('/registrosSalidas/create','App\Http\Controllers\RegSalCabController@create');
 Route::get('/registroSalida/articulos/{id}','App\Http\Controllers\RegSalCabController@articulos');//articulos
