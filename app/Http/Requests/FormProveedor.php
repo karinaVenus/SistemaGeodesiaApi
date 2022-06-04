@@ -16,14 +16,14 @@ class FormProveedor extends FormRequest
     {
         return [
             'cod_t_per'=>'required',
-            'razon_social'=>'required',
+            'razon_social'=>'required|unique:posts|max:45',
             'cod_t_doc'=>'required',
-            'nro_doc'=>'required',
-            'correo_per'=>'required',
+            'nro_doc'=>'required|unique:posts|max:11',
+            'correo_per'=>'required|unique:posts|email|max:45',
             'cod_dist'=>'required',
-            'dir_per'=>'required',
+            'dir_per'=>'required|max:450',
             'estado_prov'=>'required',
-            'nro_telf'=>'required'
+            'nro_telf'=>'required|max:9|min:7'
         ];
     }
 }

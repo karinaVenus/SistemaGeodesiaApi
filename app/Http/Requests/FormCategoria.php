@@ -15,7 +15,7 @@ class FormCategoria extends FormRequest
     public function rules()
     {
         return [
-            'des_cat'=>'required|max:45',//requerido, max 45
+            'des_cat'=>'required|unique:posts|max:45',//requerido, max 45
         ];
     }
 }
