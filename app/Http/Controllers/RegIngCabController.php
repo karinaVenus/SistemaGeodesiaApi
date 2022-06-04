@@ -25,6 +25,8 @@ class RegIngCabController extends Controller
             ->join('persona as pep','p.cod_prov','=','pep.cod_persona')
             ->join('persona as pet','t.cod_trabajador','=','pet.cod_persona')
             ->select('rc.cod_reg_in','pep.razon_social AS proveedor',DB::raw("CONCAT(pet.nom_per,' ',pet.ape_pat_per,' ',pet.ape_mat_per) AS trabajador"),'a.des_almacen','tt.des_transf','rc.fec_ing')
+            ->where('a.des_almacen','LIKE', '%'.$query.'%') //busqueda
+            ->orwhere('pep.razon_social','LIKE', '%'.$query.'%') //busqueda
             ->orderBy('rc.cod_reg_in','desc')
             ->paginate(7);
             return $regs_ings;

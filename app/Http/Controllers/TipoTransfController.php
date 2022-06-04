@@ -17,6 +17,7 @@ class TipoTransfController extends Controller
             $query = trim($request->get('searchText'));
             $tipo_transf = DB::table('tipo_transf')
             ->select('cod_t_transf','des_transf')
+            ->where('des_transf','LIKE', '%'.$query.'%') //busqueda
             ->orderBy('cod_t_transf','desc')
             ->paginate(7);
             return $tipo_transf;

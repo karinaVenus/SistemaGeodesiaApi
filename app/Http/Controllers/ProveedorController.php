@@ -22,6 +22,7 @@ class ProveedorController extends Controller
             ->join('tipo_persona as tp','pep.cod_t_per','=','tp.cod_t_per')
             ->join('tdoc_ide as tdi','pep.cod_t_doc','=','tdi.cod_t_doc')
             ->select('p.cod_prov','tp.des_t_per','pep.razon_social as proveedor','tdi.dest_doc','pep.nro_doc')
+            ->where('pep.razon_social','LIKE', '%'.$query.'%') //busqueda
             ->orderBy('p.cod_prov','desc')
             ->paginate(7);
             return $proveedor;

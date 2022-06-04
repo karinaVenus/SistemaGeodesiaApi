@@ -24,7 +24,8 @@ class RegSalCabController extends Controller
             ->join('persona as pAut','rc.cod_autorizador','=','pAut.cod_persona')
             ->join('persona as pSol','rc.cod_solicitador','=','pSol.cod_persona')
             ->select('rc.cod_reg_sal',DB::raw("CONCAT(pAut.nom_per,' ',pAut.ape_pat_per,' ',pAut.ape_mat_per) AS autoriza"),DB::raw("CONCAT(pSol.nom_per,' ',pSol.ape_pat_per,' ',pSol.ape_mat_per) AS solicita"),'a.des_almacen','tt.des_transf','rc.fec_sal')
-            //->where
+            ->where('a.des_almacen','LIKE', '%'.$query.'%') //busqueda
+            ->orwhere('pAut.nom_per','LIKE', '%'.$query.'%') //busqueda
             ->orderBy('rc.cod_reg_sal','desc')
             ->paginate(7);
             return $regs_sal;

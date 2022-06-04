@@ -17,6 +17,7 @@ class PresentacionController extends Controller
             $query = trim($request->get('searchText'));
             $presentacion = DB::table('presentacion')
             ->select('cod_pres','des_pres')
+            ->where('des_pres','LIKE', '%' . $query . '%') //busqueda
             ->orderBy('cod_pres','desc')
             ->paginate(7);
             return $presentacion;

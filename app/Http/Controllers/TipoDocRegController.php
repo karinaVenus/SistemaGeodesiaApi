@@ -16,6 +16,7 @@ class TipoDocRegController extends Controller
             $query = trim($request->get('searchText'));
             $tipo_doc_reg = DB::table('tipo_doc_reg')
             ->select('cod_t_doc','tipo_reg_doc','des_t_doc')
+            ->where('des_t_doc','LIKE', '%'.$query.'%') //busqueda
             ->where('estado_t_doc','=',1) 
             ->orderBy('cod_t_doc','desc')
             ->paginate(7);

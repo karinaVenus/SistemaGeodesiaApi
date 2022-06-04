@@ -17,6 +17,7 @@ class UnidMedController extends Controller
             $query = trim($request->get('searchText'));
             $unid_med = DB::table('unid_med')
             ->select('cod_unid_med','des_unid_med','prefijo_unid_med')
+            ->where('des_unid_med','LIKE', '%'.$query.'%') //busqueda
             ->orderBy('cod_unid_med','desc')
             ->paginate(7);
             return $unid_med;
