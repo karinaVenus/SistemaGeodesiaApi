@@ -15,7 +15,7 @@ class FormTipo_Transf extends FormRequest
     public function rules()
     {
         return [
-            'des_transf'=>'required|unique:posts|max:45',//requerido, max 45
+            'des_transf'=>'required|unique:tipo_transf|max:45',//requerido, max 45
         ];
     }
 }

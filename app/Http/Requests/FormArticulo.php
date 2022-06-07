@@ -25,7 +25,7 @@ class FormArticulo extends FormRequest
     {
         return [
             'cod_art'=>'required',
-            'des_art'=>'required|max:50', //requerido, max 50
+            'des_art'=>'required|unique:articulo|max:50', //requerido, max 50
             'cod_cat'=>'required',                     //requerido
             'cod_pres'=>'required',                    //requerido
             'cod_unid_med'=>'required',                //requerido

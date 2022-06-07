@@ -15,8 +15,8 @@ class FormUnid_Med extends FormRequest
     public function rules()
     {
         return [
-            'des_unid_med'=>'required|unique:posts|max:45',
-            'prefijo_unid_med'=>'required|unique:posts|max:10'
+            'des_unid_med'=>'required|unique:unid_med|max:45',
+            'prefijo_unid_med'=>'required|unique:unid_med|max:10'
         ];
     }
 }

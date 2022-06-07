@@ -16,10 +16,10 @@ class FormProveedor extends FormRequest
     {
         return [
             'cod_t_per'=>'required',
-            'razon_social'=>'required|unique:posts|max:45',
+            'razon_social'=>'required|unique:persona|max:45',
             'cod_t_doc'=>'required',
-            'nro_doc'=>'required|unique:posts|max:11',
-            'correo_per'=>'required|unique:posts|email|max:45',
+            'nro_doc'=>'required|unique:persona|max:11',
+            'correo_per'=>'required|email|max:45',
             'cod_dist'=>'required',
             'dir_per'=>'required|max:450',
             'estado_prov'=>'required',

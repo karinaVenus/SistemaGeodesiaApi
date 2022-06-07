@@ -21,7 +21,7 @@ class FormReg_ing_cab extends FormRequest
             'cod_almacen'=>'required',
             'cod_t_transf'=>'required',
             'cod_t_doc'=>'required',
-            'nro_doc'=>'required|unique:posts|max:11',
+            'nro_doc'=>'required|unique:reg_ing_cab|max:11',
             'fec_doc'=>'required|date',
             'cod_estado_reg'=>'required',
             'tot_pagar'=>'required',

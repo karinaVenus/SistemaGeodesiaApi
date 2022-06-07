@@ -14,7 +14,7 @@ class FormPresentacion extends FormRequest
     public function rules()
     {
         return [
-            'des_pres'=>'required|unique:posts|max:45',//requerido, max 45
+            'des_pres'=>'required|unique:presentacion|max:45',//requerido, max 45
         ];
     }
 }
