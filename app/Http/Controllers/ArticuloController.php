@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 
 //restricciones
 use App\Http\Requests\FormArticulo;
+use App\Http\Requests\FormArticuloUpdate;
+
 use Exception;
 
 class ArticuloController extends Controller
@@ -23,8 +25,7 @@ class ArticuloController extends Controller
             ->join('presentacion as pr','art.cod_pres','=','pr.cod_pres')
             ->join('unid_med as um','art.cod_unid_med','=','um.cod_unid_med')
             ->join('estado_articulo as ea','art.cod_estado_art','=','ea.cod_estado_art')
-            ->select('art.cod_art','art.des_art','cat.cod_cat','pr.cod_pres','um.cod_unid_med',
-            'art.stock_art','art.imagen_art','ea.cod_estado_art')
+            ->select('art.cod_art','art.des_art','cat.cod_cat','pr.cod_pres','um.cod_unid_med','art.imagen_art','ea.cod_estado_art')
             ->where('art.des_art','LIKE', '%' . $busqueda . '%')
             ->orderBy('des_art', 'desc')
             ->paginate(15);
@@ -94,7 +95,7 @@ class ArticuloController extends Controller
         ->join('categoria as cat','art.cod_cat','=','cat.cod_cat')
         ->join('presentacion as pr','art.cod_pres','=','pr.cod_pres')
         ->join('unid_med as um','art.cod_unid_med','=','um.cod_unid_med')
-        ->select('art.des_art','cat.des_cat','pr.des_pres','um.des_unid_med','art.stock_art','art.imagen_art')
+        ->select('art.des_art','cat.des_cat','pr.des_pres','um.des_unid_med','art.imagen_art')
         ->where('art.cod_art','=',$id)
         ->get();
 
@@ -103,18 +104,41 @@ class ArticuloController extends Controller
         ], 200, );
     }
 
-    public function edit(Articulo $articulo)
-    {
-        //
+    public function edit($id)
+    {   //consultar y obtener los datos referente al precarcado
+        $articulo = DB::table('articulo as art')
+        ->join('categoria as cat','art.cod_cat','=','cat.cod_cat')
+        ->join('presentacion as pr','art.cod_pres','=','pr.cod_pres')
+        ->join('unid_med as um','art.cod_unid_med','=','um.cod_unid_med')
+        ->select('art.cod_art','art.des_art','cat.des_cat','pr.des_pres','um.des_unid_med','art.imagen_art')
+        ->where('art.cod_art','=',$id)
+        ->first();
+        
+        return response()->json([
+            "articulo" => $articulo
+        ], 200,);
     }
 
-    public function update(Request $request, Articulo $articulo)
-    {
-        //
+    public function update(FormArticuloUpdate $request, $id)
+    {   // METODO PUT -> http://127.0.0.1:8000/api/articuloUpdate/ART011
+        $des_art = $request->get('des_art');
+        $cod_cat = $request->get('cod_cat');
+        $cod_pres = $request->get('cod_pres');
+        $cod_unid_med = $request->get('cod_unid_med');
+        $imagen_art = $request->get('imagen_art');
+
+        $articulo = DB::table('articulo')
+        ->where('cod_art','=',$id)
+        ->limit(1)
+        ->update(['des_art' => $des_art,'cod_cat' => $cod_cat,'cod_pres' => $cod_pres,'cod_unid_med' => $cod_unid_med,'imagen_art' => $imagen_art,]);
+
+        return response()->json([
+            //"msg" => 
+        ], 200 );
     }
 
-    public function destroy(Articulo $articulo)
+    public function destroy($id)
     {
-        //
+        
     }
 }

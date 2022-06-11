@@ -22,6 +22,8 @@ Route::get('/articulos','App\Http\Controllers\ArticuloController@index');
 Route::get('/articulos/create','App\Http\Controllers\ArticuloController@create');
 Route::post('/articulo','App\Http\Controllers\ArticuloController@store');
 Route::get('/articulo/{id}','App\Http\Controllers\ArticuloController@show');
+Route::get('/articuloEditar/{id}','App\Http\Controllers\ArticuloController@edit');
+Route::put('/articuloUpdate/{id}','App\Http\Controllers\ArticuloController@update');
 
 Route::get('/registrosIngresos','App\Http\Controllers\RegIngCabController@index');
 Route::get('/registrosIngresos/create','App\Http\Controllers\RegIngCabController@create');

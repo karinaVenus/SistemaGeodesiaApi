@@ -9,8 +9,9 @@ class Articulo extends Model
 {
     //use HasFactory;
     protected $table = 'articulo';
-    protected $primaryKey = 'cod_art';
+    public $primaryKey = 'cod_art';
     public $timestamps = false;
+    public $incrementing = false;
 
     protected $fillable = [
         'cod_art',
