@@ -61,7 +61,6 @@ class ArticuloController extends Controller
 
     public function store(FormArticulo $request)
     {
-        
         try{
             DB::beginTransaction();
             $articulo = new Articulo;
@@ -71,7 +70,7 @@ class ArticuloController extends Controller
             $articulo->cod_pres = $request->get('cod_pres');
             $articulo->cod_unid_med = $request->get('cod_unid_med');
             $articulo->imagen_art = $request->get('imagen_art');
-            $articulo->cod_estado_art = $request->get('cod_estado_art');
+            $articulo->cod_estado_art = 1; // 1:Activo  2:Inactivo
             $articulo->save();
 
             if($articulo->save()){
@@ -86,7 +85,6 @@ class ArticuloController extends Controller
         return response()->json([
             'msg' => $msg
         ], 200, );
-       
     }
 
     public function show($id)
@@ -120,7 +118,50 @@ class ArticuloController extends Controller
     }
 
     public function update(FormArticuloUpdate $request, $id)
-    {   // METODO PUT -> http://127.0.0.1:8000/api/articuloUpdate/ART011
+    {   // METODO PUT 
+        try{
+            DB::beginTransaction();
+            $articulo = Articulo::find($id);
+            $articulo->cod_art = $request->get('cod_art');
+            $articulo->des_art = $request->get('des_art');
+            $articulo->cod_cat = $request->get('cod_cat');
+            $articulo->cod_pres = $request->get('cod_pres');
+            $articulo->cod_unid_med = $request->get('cod_unid_med');
+            $articulo->imagen_art = $request->get('imagen_art');
+            $articulo->update();
+
+            if($articulo->update()){
+                $msg="Registro articulo modificado";
+            }
+            DB::commit();
+
+        }catch(Exception $e){
+            DB::rollBack();
+        }
+
+        return response()->json([
+            'articulo' => $articulo,
+            'msg' => $msg
+        ], 200, );
+    }
+
+    public function destroy($id,$msg)
+    {
+        $articulo = Articulo::find($id);
+        $articulo->cod_estado_art = 2; // 1:Activo  2:Inactivo
+        $articulo->update();
+
+        if($articulo->update()){
+            $msg="Registro articulo deshabilitado";
+        }
+
+        return response()->json([
+            'msg' => $msg
+        ], 200, );
+    }
+}
+
+ /* SEGUNDO METODO
         $des_art = $request->get('des_art');
         $cod_cat = $request->get('cod_cat');
         $cod_pres = $request->get('cod_pres');
@@ -130,15 +171,4 @@ class ArticuloController extends Controller
         $articulo = DB::table('articulo')
         ->where('cod_art','=',$id)
         ->limit(1)
-        ->update(['des_art' => $des_art,'cod_cat' => $cod_cat,'cod_pres' => $cod_pres,'cod_unid_med' => $cod_unid_med,'imagen_art' => $imagen_art,]);
-
-        return response()->json([
-            //"msg" => 
-        ], 200 );
-    }
-
-    public function destroy($id)
-    {
-        
-    }
-}
+        ->update(['des_art' => $des_art,'cod_cat' => $cod_cat,'cod_pres' => $cod_pres,'cod_unid_med' => $cod_unid_med,'imagen_art' => $imagen_art,]);*/

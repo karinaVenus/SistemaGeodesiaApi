@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FormUnid_Med;
+use App\Http\Requests\FormUnid_MedUpdate;
 use App\Models\Unid_Med;
 use Exception;
 use Illuminate\Http\Request;
@@ -58,14 +59,36 @@ class UnidMedController extends Controller
         ], 200,);
     }
 
-    public function edit(Unid_Med $unid_Med)
+    public function edit($id)
     {
-        //
+        $unid_med = Unid_med::find($id);
+        return response()->json([
+            "unid_med" => $unid_med
+        ], 200,);
     }
 
-    public function update(Request $request, Unid_Med $unid_Med)
+    public function update(FormUnid_MedUpdate $request, $id)
     {
-        //
+        try{
+            DB::beginTransaction();
+            $unid_med = Unid_med::find($id);
+            $unid_med->des_unid_med = $request->get('des_unid_med');
+            $unid_med->prefijo_unid_med = $request->get('prefijo_unid_med');
+            $unid_med->update();
+
+            if($unid_med->update()){
+                $msg="Registro unidad de medida modificado";
+            }
+            DB::commit();
+
+        }catch(Exception $e){
+            DB::rollBack();
+        }
+
+        return response()->json([
+            'unid_med' => $unid_med,
+            'msg' => $msg
+        ], 200, );
     }
 
     public function destroy(Unid_Med $unid_Med)

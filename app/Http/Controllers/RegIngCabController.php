@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FormReg_ing_cab;
+use App\Http\Requests\FormReg_ing_cabUpdate;
 use App\Models\Reg_ing_cab;
 use App\Models\Reg_ing_det;
 
@@ -181,14 +182,80 @@ class RegIngCabController extends Controller
         ], 200, );
     }
 
-    public function edit(Reg_ing_cab $reg_ing_cab)
+    public function edit($id)
     {
-        //
+        $reg_ing_cab = DB::table('reg_ing_cab as rc')
+        ->join('proveedor as p','rc.cod_prov','=','p.cod_prov')
+        ->join('trabajador as t','rc.cod_trabajador','=','t.cod_trabajador')
+        ->join('almacen as a','rc.cod_almacen','=','a.cod_almacen')
+        ->join('tipo_transf as tt','rc.cod_t_transf','=','tt.cod_t_transf')
+        ->join('tipo_doc_reg as td','rc.cod_t_doc','=','td.cod_t_doc')
+        ->join('estado_registro as er','rc.cod_estado_reg','=','er.cod_estado_reg')
+        ->join('persona as pep','p.cod_prov','=','pep.cod_persona')
+        ->join('persona as pet','t.cod_trabajador','=','pet.cod_persona')
+        ->select('rc.cod_reg_in','pep.razon_social AS proveedor',DB::raw("CONCAT(pet.nom_per,' ',pet.ape_pat_per,' ',pet.ape_mat_per) AS trabajador"),'a.des_almacen','tt.des_transf','td.des_t_doc','rc.nro_doc','rc.fec_doc','rc.fec_ing','er.des_estado_reg','rc.tot_pagar')
+        ->where('rc.cod_reg_in','=',$id)
+        ->first();
+
+        $reg_ing_det = DB::table('reg_ing_det as rd')
+        ->join('articulo as art','rd.cod_art','=','art.cod_art')
+        ->join('unid_med as um','art.cod_unid_med','=','um.cod_unid_med')
+        ->select('art.cod_art','art.des_art','um.des_unid_med','rd.prec_unit','rd.cant_art','rd.prec_compr','rd.obs_ing')
+        ->where('rd.cod_reg_ing','=',$id)
+        ->get();
+
+        return response()->json([
+            "reg_ing_cab" => $reg_ing_cab,
+            "reg_ing_det" => $reg_ing_det
+        ], 200,);
     }
 
-    public function update(Request $request, Reg_ing_cab $reg_ing_cab)
+    public function update(FormReg_ing_cabUpdate $request,$id)
     {
-        //
+        try{
+            DB::beginTransaction();
+            $reg_ing_cab = Reg_ing_cab::find($id);
+            $reg_ing_cab->cod_prov = $request->get('cod_prov');
+            $reg_ing_cab->cod_trabajador = $request->get('cod_trabajador');
+            $reg_ing_cab->cod_almacen = $request->get('cod_almacen');
+            $reg_ing_cab->cod_t_transf = $request->get('cod_t_transf');
+            $reg_ing_cab->cod_t_doc = $request->get('cod_t_doc');
+            $reg_ing_cab->nro_doc = $request->get('nro_doc');
+            $reg_ing_cab->fec_doc = $request->get('fec_doc'); //2014-10-25
+            $reg_ing_cab->tot_pagar = $request->get('tot_pagar');
+            $reg_ing_cab->update();
+
+            $cod_art = $request->get('cod_art');
+            $prec_unit = $request->get('prec_unit');
+            $cant_art = $request->get('cant_art');
+            $prec_compr = $request->get('prec_compr');
+            $obs_ing = $request->get('obs_ing');
+
+            DB::delete('delete from reg_ing_det where cod_reg_ing = ?',[$id]);
+
+            $cont=0;
+            while($cont < count($cod_art)){
+                $reg_ing_det = new Reg_ing_det();
+                $reg_ing_det->cod_reg_ing = $id;
+                $reg_ing_det->cod_art = $cod_art[$cont];
+                $reg_ing_det->prec_unit = $prec_unit[$cont];
+                $reg_ing_det->cant_art = $cant_art[$cont];
+                $reg_ing_det->prec_compr = $prec_compr[$cont];
+                $reg_ing_det->obs_ing = $obs_ing[$cont];
+                $reg_ing_det->save();
+
+                $cont = $cont + 1;
+            }
+
+            DB::commit();
+
+        }catch(Exception $e){
+            $msg = "Error";
+            DB::rollBack();
+        }
+        return response()->json([
+            'msg' => $msg
+        ]);
     }
 
     public function destroy($id)

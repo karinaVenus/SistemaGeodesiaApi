@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator; //para el validador
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class FormArticuloUpdate extends FormRequest
+class FormReg_sal_cabUpdate extends FormRequest
 {
     public function authorize()
     {
@@ -16,12 +16,20 @@ class FormArticuloUpdate extends FormRequest
     public function rules()
     {
         return [
-            'cod_art',
-            'des_art'=>'exists:articulo,des_art|required|max:50', //requerido, max 50
-            'cod_cat'=>'required',                     //requerido
-            'cod_pres'=>'required',                    //requerido
-            'cod_unid_med'=>'required',                //requerido
-            'imagen_art'=>'required|max:200', //requerido, max 200  mimes:jpeg,jpg,png|max:200
+            'cod_solicitador'=>'required',
+            'cod_autorizador'=>'required',
+            'cod_almacen'=>'required',
+            'cod_t_transf'=>'required',
+            'cod_t_doc'=>'required',
+            'nro_doc'=>'required|max:11',
+            'fec_doc'=>'required',
+            //'cod_estado_reg'=>'required',
+            //'tot_pagar'=>'required',
+
+            'cod_art'=>'required',
+            'cant_art'=>'required',
+           // 'prec_sal'=>'required',
+            'obs_sal'=>'max:350'
         ];
     }
     protected function failedValidation(Validator $validator)
@@ -31,5 +39,4 @@ class FormArticuloUpdate extends FormRequest
             'status' => true
         ], 422));
     }
-    
 }

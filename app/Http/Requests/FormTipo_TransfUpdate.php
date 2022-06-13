@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator; //para el validador
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class FormArticuloUpdate extends FormRequest
+class FormTipo_TransfUpdate extends FormRequest
 {
     public function authorize()
     {
@@ -16,12 +16,7 @@ class FormArticuloUpdate extends FormRequest
     public function rules()
     {
         return [
-            'cod_art',
-            'des_art'=>'exists:articulo,des_art|required|max:50', //requerido, max 50
-            'cod_cat'=>'required',                     //requerido
-            'cod_pres'=>'required',                    //requerido
-            'cod_unid_med'=>'required',                //requerido
-            'imagen_art'=>'required|max:200', //requerido, max 200  mimes:jpeg,jpg,png|max:200
+            'des_transf'=>'required|max:45',//requerido, max 45
         ];
     }
     protected function failedValidation(Validator $validator)
@@ -31,5 +26,4 @@ class FormArticuloUpdate extends FormRequest
             'status' => true
         ], 422));
     }
-    
 }

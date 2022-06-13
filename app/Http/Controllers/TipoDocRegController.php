@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FormTipo_doc_reg;
+use App\Http\Requests\FormTipo_doc_regUpdate;
 use App\Models\Tipo_doc_reg;
 use Exception;
 use Illuminate\Http\Request;
@@ -58,14 +59,36 @@ class TipoDocRegController extends Controller
         ], 200,);
     }
 
-    public function edit(Tipo_doc_reg $tipo_doc_reg)
+    public function edit($id)
     {
-        //
+        $tipo_doc_reg = Tipo_doc_reg::find($id);
+        return response()->json([
+            "tipo_doc_reg" => $tipo_doc_reg
+        ], 200,);
     }
 
-    public function update(Request $request, Tipo_doc_reg $tipo_doc_reg)
+    public function update(FormTipo_doc_regUpdate $request, $id)
     {
-        //
+        try{
+            DB::beginTransaction();
+            $tipo_doc_reg = Tipo_doc_reg::find($id);
+            $tipo_doc_reg->tipo_reg_doc = $request->get('tipo_reg_doc');
+            $tipo_doc_reg->des_t_doc = $request->get('des_t_doc');
+            $tipo_doc_reg->update();
+
+            if($tipo_doc_reg->update()){
+                $msg="Registro tipo de documento modificado";
+            }
+            DB::commit();
+
+        }catch(Exception $e){
+            DB::rollBack();
+        }
+
+        return response()->json([
+            'tipo_doc_reg' => $tipo_doc_reg,
+            'msg' => $msg
+        ], 200, );
     }
 
     public function destroy(Tipo_doc_reg $tipo_doc_reg)

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FormCategoria;
+use App\Http\Requests\FormCategoriaUpdate;
 use App\Models\Categoria;
 use Exception;
 use Illuminate\Http\Request;
@@ -59,14 +60,38 @@ class CategoriaController extends Controller
         ], 200,);
     }
 
-    public function edit(Categoria $categoria)
+    public function edit($id)
     {
-        //
+        $categoria = DB::table('categoria')
+        ->select('cod_cat','des_cat')
+        ->where('cod_cat','=',$id)
+        ->first();
+
+        return response()->json([
+            "categoria" => $categoria
+        ], 200,);
     }
 
-    public function update(Request $request, Categoria $categoria)
+    public function update(FormCategoriaUpdate $request, $id)
     {
-        //
+        try{
+            DB::beginTransaction();
+            $categoria = Categoria::find($id);
+            $categoria->des_cat = $request->get('des_cat');
+            $categoria->update();
+            DB::commit();
+
+            if($categoria->update()){
+                $msg="Registro categoria modificado";
+            }
+
+        }catch(Exception $e){
+            DB::rollBack();
+        }
+        return response()->json([
+            'categoria' => $categoria,
+            'msg'=>$msg
+        ], 200, );
     }
 
     public function destroy(Categoria $categoria)

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FormTipo_Transf;
+use App\Http\Requests\FormTipo_TransfUpdate;
 use App\Models\Tipo_Transf;
 use Exception;
 use Illuminate\Http\Request;
@@ -57,14 +58,35 @@ class TipoTransfController extends Controller
         ], 200,);
     }
 
-    public function edit(Tipo_Transf $tipo_Transf)
+    public function edit($id)
     {
-        //
+        $tipo_transf = Tipo_Transf::find($id);
+        return response()->json([
+            "tipo_transf" => $tipo_transf
+        ], 200,);
     }
 
-    public function update(Request $request, Tipo_Transf $tipo_Transf)
+    public function update(FormTipo_TransfUpdate $request,$id)
     {
-        //
+        try{
+            DB::beginTransaction();
+            $tipo_transf = Tipo_Transf::find($id);
+            $tipo_transf->des_transf = $request->get('des_transf');
+            $tipo_transf->update();
+
+            if($tipo_transf->update()){
+                $msg="Registro tipo de transferencia modificado";
+            }
+            DB::commit();
+
+        }catch(Exception $e){
+            DB::rollBack();
+        }
+
+        return response()->json([
+            'tipo_transf' => $tipo_transf,
+            'msg' => $msg
+        ], 200, );
     }
 
     public function destroy(Tipo_Transf $tipo_Transf)

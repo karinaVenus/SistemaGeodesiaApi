@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FormProveedor;
+use App\Http\Requests\FormProveedorUpdate;
 use App\Models\Proveedor;
 use App\Models\Persona;
 use App\Models\Telefono;
@@ -142,19 +143,96 @@ class ProveedorController extends Controller
         
     }
 
-    public function show(Proveedor $proveedor)
+    public function show($id)
     {
-        //
+        $proveedor = DB::table('proveedor as p')
+        ->join('persona as pep','p.cod_prov','=','pep.cod_persona')
+        ->join('tipo_persona as tp','pep.cod_t_per','=','tp.cod_t_per')
+        ->join('tdoc_ide as tdi','pep.cod_t_doc','=','tdi.cod_t_doc')  
+        ->join('distrito as dist','pep.cod_dist','=','dist.cod_dist')
+        ->join('provincia as provi','dist.cod_provi','=','provi.cod_provi')
+        ->join('departamento as dpt','provi.cod_dep','=','dpt.cod_dpt')
+        ->select('p.cod_prov','tp.des_t_per','pep.razon_social as proveedor','tdi.dest_doc','pep.nro_doc','pep.correo_per','dpt.des_dpt','provi.des_provi','dist.des_distrito','pep.dir_per')
+        ->where('p.cod_prov','=',$id)
+        ->get();
+
+        $telefono = DB::table('proveedor as p')
+        ->join('persona as pep','p.cod_prov','=','pep.cod_persona')
+        ->join('telefono as telf','pep.cod_persona','=','telf.cod_persona')
+        ->select('telf.nro_telf')
+        ->where('p.cod_prov','=',$id)
+        ->get();
+
+        return response()->json([
+            'proveedor'=>$proveedor,
+            'telefonos'=>$telefono
+        ], 200,);
     }
 
-    public function edit(Proveedor $proveedor)
+    public function edit($id)
     {
-        //
+        $proveedor = DB::table('proveedor as p')
+        ->join('persona as pep','p.cod_prov','=','pep.cod_persona')
+        ->join('tipo_persona as tp','pep.cod_t_per','=','tp.cod_t_per')
+        ->join('tdoc_ide as tdi','pep.cod_t_doc','=','tdi.cod_t_doc')  
+        ->join('distrito as dist','pep.cod_dist','=','dist.cod_dist')
+        ->join('provincia as provi','dist.cod_provi','=','provi.cod_provi')
+        ->join('departamento as dpt','provi.cod_dep','=','dpt.cod_dpt')
+        ->select('p.cod_prov','tp.des_t_per','pep.razon_social as proveedor','tdi.dest_doc','pep.nro_doc','pep.correo_per','dpt.des_dpt','provi.des_provi','dist.des_distrito','pep.dir_per')
+        ->where('p.cod_prov','=',$id)
+        ->first();
+
+        $telefono = DB::table('proveedor as p')
+        ->join('persona as pep','p.cod_prov','=','pep.cod_persona')
+        ->join('telefono as telf','pep.cod_persona','=','telf.cod_persona')
+        ->select('telf.nro_telf')
+        ->where('p.cod_prov','=',$id)
+        ->get();
+
+        return response()->json([
+            'proveedor'=>$proveedor,
+            'telefonos'=>$telefono
+        ], 200,);
     }
 
-    public function update(Request $request, Proveedor $proveedor)
+    public function update(FormProveedorUpdate $request,$id)
     {
-        //
+        try{
+            DB::beginTransaction();
+            $proveedor = Persona::find($id);
+            $proveedor->cod_t_per = $request->get('cod_t_per');
+            $proveedor->razon_social = $request->get('razon_social');
+            $proveedor->cod_t_doc = $request->get('cod_t_doc');
+            $proveedor->nro_doc = $request->get('nro_doc');
+            $proveedor->correo_per = $request->get('correo_per');
+            $proveedor->cod_dist = $request->get('cod_dist');
+            $proveedor->dir_per = $request->get('dir_per');
+            $proveedor->update();
+
+            $nro_telf = $request->get('nro_telf');
+            DB::delete('delete from telefono where cod_persona = ?',[$id]);
+            $cont=0;
+                while($cont < count($nro_telf)){
+                    $telefono = new Telefono();
+                    $telefono->cod_persona = $id;
+                    $telefono->nro_telf=$nro_telf[$cont];
+                    $telefono->save();
+        
+                    $cont = $cont + 1;
+                }
+            if($proveedor->update()||$telefono->update()){
+                $msg="Registro proveedor modificado";
+            }
+            DB::commit();
+        }catch(Exception $e){
+            $msg = "Error";
+            DB::rollBack();
+        }
+        return response()->json([
+            'msg' => $msg,
+            'proveedor'=>$proveedor,
+            'telefonos'=>$telefono
+        ]);
     }
 
     public function destroy(Proveedor $proveedor)
