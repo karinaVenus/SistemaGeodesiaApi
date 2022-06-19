@@ -12,18 +12,18 @@ use Illuminate\Support\Facades\DB;
 class CategoriaController extends Controller
 {
 
-    public function index(Request $request)
+    public function index(/*Request $request*/)
     {
         //
-        if($request){
-            $query = trim($request->get('searchText'));
+        //if($request){
+            //$query = trim($request->get('searchText'));
             $categoria = DB::table('categoria')
             ->select('cod_cat','des_cat')
-            ->where('des_cat','LIKE', '%' . $query . '%') //busqueda
+            //->where('des_cat','LIKE', '%' . $query . '%') //busqueda
             ->orderBy('cod_cat','desc')
             ->paginate(7);
             return $categoria;
-        }
+        //}
     }
 
 

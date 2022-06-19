@@ -4,7 +4,7 @@
 --
 -- Servidor: localhost
 -- Tiempo de generación: 01-06-2022 a las 19:29:37
--- Versión del servidor: 10.4.21-MariaDB
+-- Versión del servidor: 10.4.21dvf4ebunkju6k60mdvf4ebunkju6k60m-MariaDB
 -- Versión de PHP: 8.0.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -25,7 +25,7 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inventario_actual` (IN `cod_alm` INT(11))   select art.cod_art, 
+CREATE PROCEDURE `inventario_actual` (IN `cod_alm` INT(11))   select art.cod_art, 
 art.des_art, 
 um.des_unid_med, 
 inv.stock_almacen, 
@@ -36,7 +36,7 @@ INNER JOIN unid_med as um on um.cod_unid_med = art.cod_unid_med
 where inv.stock_almacen > 0 && 
 inv.cod_almacen = cod_alm$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `kardex_articulo` (IN `articulo` VARCHAR(12), IN `fec_ini` DATE, IN `fec_fin` DATE, IN `cod_alm` INT(11))   select art.cod_art, 'INGRESO' as movimiento,
+CREATE PROCEDURE `kardex_articulo` (IN `articulo` VARCHAR(12), IN `fec_ini` DATE, IN `fec_fin` DATE, IN `cod_alm` INT(11))   select art.cod_art, 'INGRESO' as movimiento,
     Date_format(ri.fec_ing,'%Y/%m/%d') as FECHA,
     #ri.fec_ing as FECHA,
     rid.cant_art as CANT_ING,
@@ -65,10 +65,10 @@ SELECT art.cod_art, 'SALIDA' as movimiento,
     rs.fec_sal BETWEEN CONCAT(fec_ini," 00:00:00") and CONCAT(fec_fin," 23:59:59")
     order by FECHA asc$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `NO?stockXval_art` (IN `articulo` VARCHAR(12))   SELECT 
+CREATE PROCEDURE `NO?stockXval_art` (IN `articulo` VARCHAR(12))   SELECT 
 sum(cant_art) as STOCK_ACTUAL,sum(prec_art*cant_art) as VALOR_ACTUAL FROM reg_ing_aux WHERE cod_art = articulo && fec_ing BETWEEN CONCAT(fec_ini," 00:00:00") and CONCAT(fec_fin," 23:59:59")$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `NO_total_cant_fin_lapso` (IN `articulo` VARCHAR(12), IN `fec_ini` DATE)   select(
+CREATE PROCEDURE `NO_total_cant_fin_lapso` (IN `articulo` VARCHAR(12), IN `fec_ini` DATE)   select(
 (select sum(rid.cant_art) as CANT 
 from articulo as art
 right join reg_ing_det as rid on rid.cod_art = art.cod_art
@@ -82,7 +82,7 @@ inner join reg_sal_cab as rs on rs.cod_reg_sal = rsd.cod_reg_sal
 where art.cod_art = articulo  && rs.fec_sal BETWEEN CONCAT(date_add(fec_ini, INTERVAL 1 DAY)," 00:00:00") and NOW() )
 ) as total_cant_lapso$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `total_cant_lapso` (IN `articulo` VARCHAR(12), IN `fec_ini` DATE, IN `cod_alm` INT(11))   select(
+CREATE PROCEDURE `total_cant_lapso` (IN `articulo` VARCHAR(12), IN `fec_ini` DATE, IN `cod_alm` INT(11))   select(
 (SELECT stock_almacen FROM inventario WHERE cod_art = articulo && cod_almacen = cod_alm)
 -
 (select IFNULL(sum(rid.cant_art),0) as CANT 
@@ -102,7 +102,7 @@ where art.cod_art = articulo  &&
  rs.fec_sal BETWEEN CONCAT(fec_ini," 00:00:00") and NOW() )
 ) as cant_ini$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `total_valor_lapso` (IN `articulo` VARCHAR(12), IN `fec_ini` DATE, IN `cod_alm` INT(11))   begin
+CREATE PROCEDURE `total_valor_lapso` (IN `articulo` VARCHAR(12), IN `fec_ini` DATE, IN `cod_alm` INT(11))   begin
 select(
 (SELECT 
 sum(prec_art*cant_art) as TOTAL FROM reg_ing_aux WHERE cod_art = articulo && cod_almacen = cod_alm)
@@ -1641,3 +1641,4 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+dvf4ebunkju6k60m
