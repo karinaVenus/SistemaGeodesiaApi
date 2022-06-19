@@ -21,7 +21,7 @@ class CategoriaController extends Controller
             ->select('cod_cat','des_cat')
             //->where('des_cat','LIKE', '%' . $query . '%') //busqueda
             ->orderBy('cod_cat','desc')
-            ->get()
+            ->get();
             return $categoria;
         //}
     }
