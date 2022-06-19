@@ -17,11 +17,14 @@ class CategoriaController extends Controller
         //
         //if($request){
             //$query = trim($request->get('searchText'));
-            $categoria = DB::table('categoria')
-            ->select('cod_cat','des_cat')
-            //->where('des_cat','LIKE', '%' . $query . '%') //busqueda
-            ->orderBy('cod_cat','desc')
-            ->get();
+            // $categoria = DB::table('categoria')
+            // ->select('cod_cat','des_cat')
+            // //->where('des_cat','LIKE', '%' . $query . '%') //busqueda
+            // ->orderBy('cod_cat','desc')
+            // ->get();
+
+            $categoria = DB::select('select * from categoria');
+            
             return $categoria;
         //}
     }
